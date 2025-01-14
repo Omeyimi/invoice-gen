@@ -6,61 +6,111 @@
   <title>Invoice Generator</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    .form-container {
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background: #f9f9f9;
-    }
-    .form-container label {
-      display: block;
-      margin-top: 10px;
-    }
-    .form-container input, .form-container textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .form-container button {
-      margin-top: 15px;
-      padding: 10px 15px;
-      background: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .form-container button:hover {
-      background: #0056b3;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin: 10px 0 5px;
+}
+
+input, textarea {
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.hidden {
+  display: none;
+}
+
+#invoice {
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+}
+
+#invoice h1 {
+  text-align: left;
+  color: #007BFF;
     }
   </style>
 </head>
 <body>
-  <div class="form-container">
-    <h2>Invoice Generator</h2>
-    <label for="name">Recipient Name:</label>
-    <input type="text" id="name" placeholder="Enter recipient's name">
+  <div class="container">
+    <h1>Invoice Generator</h1>
+    <form id="invoice-form">
+      <label for="issueDate">Issue Date:</label>
+      <input type="date" id="issueDate" required>
 
-    <label for="invoice-number">Invoice Number:</label>
-    <input type="text" id="invoice-number" placeholder="Enter invoice number">
+      <label for="invoiceNumber">Invoice Number:</label>
+      <input type="text" id="invoiceNumber" required>
 
-    <label for="date">Date:</label>
-    <input type="date" id="date">
+      <label for="paymentConditions">Payment Conditions:</label>
+      <input type="text" id="paymentConditions" required>
 
-    <label for="details">Invoice Details:</label>
-    <textarea id="details" rows="5" placeholder="Enter item details, prices, etc."></textarea>
+      <label for="invoiceAmount">Invoice Amount (DKK):</label>
+      <input type="number" id="invoiceAmount" required>
 
-    <button id="download-btn">Download Invoice</button>
+      <label for="latestPaymentDate">Latest Payment Date:</label>
+      <input type="date" id="latestPaymentDate" required>
+
+      <label for="yourReference">Your Reference:</label>
+      <input type="text" id="yourReference" required>
+
+      <label for="description">Description:</label>
+      <textarea id="description" rows="4" required></textarea>
+
+      <button type="button" id="generate-pdf">Generate PDF</button>
+    </form>
+    <div id="invoice" class="hidden">
+      <!-- Invoice Template -->
+      <div id="pdf-content">
+        <h1>INVOICE <span id="invoiceNumberDisplay"></span></h1>
+        <p>Date: <span id="issueDateDisplay"></span></p>
+        <p>Payment conditions: <span id="paymentConditionsDisplay"></span></p>
+        <p>Invoiced amount: <span id="invoiceAmountDisplay"></span> DKK</p>
+        <p>Latest payment date: <span id="latestPaymentDateDisplay"></span></p>
+        <p>Your reference: <span id="yourReferenceDisplay"></span></p>
+        <p>Description: <span id="descriptionDisplay"></span></p>
+      </div>
+    </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script src="html2pdf.bundle.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
