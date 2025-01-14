@@ -1,23 +1,31 @@
-document.getElementById('download-btn').addEventListener('click', () => {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+document.getElementById("generate-pdf").addEventListener("click", function () {
+  // Fetch input values
+  const issueDate = document.getElementById("issueDate").value;
+  const invoiceNumber = document.getElementById("invoiceNumber").value;
+  const paymentConditions = document.getElementById("paymentConditions").value;
+  const invoiceAmount = document.getElementById("invoiceAmount").value;
+  const latestPaymentDate = document.getElementById("latestPaymentDate").value;
+  const yourReference = document.getElementById("yourReference").value;
+  const description = document.getElementById("description").value;
 
-  // Get input values
-  const name = document.getElementById('name').value;
-  const invoiceNumber = document.getElementById('invoice-number').value;
-  const date = document.getElementById('date').value;
-  const details = document.getElementById('details').value;
+  // Populate invoice template
+  document.getElementById("issueDateDisplay").textContent = issueDate;
+  document.getElementById("invoiceNumberDisplay").textContent = invoiceNumber;
+  document.getElementById("paymentConditionsDisplay").textContent = paymentConditions;
+  document.getElementById("invoiceAmountDisplay").textContent = invoiceAmount;
+  document.getElementById("latestPaymentDateDisplay").textContent = latestPaymentDate;
+  document.getElementById("yourReferenceDisplay").textContent = yourReference;
+  document.getElementById("descriptionDisplay").textContent = description;
 
-  // Add content to the PDF
-  doc.setFontSize(16);
-  doc.text('Invoice', 105, 20, { align: 'center' });
-  doc.setFontSize(12);
-  doc.text(`Recipient: ${name}`, 20, 40);
-  doc.text(`Invoice Number: ${invoiceNumber}`, 20, 50);
-  doc.text(`Date: ${date}`, 20, 60);
-  doc.text('Details:', 20, 80);
-  doc.text(details, 20, 90, { maxWidth: 170 });
+  // Generate PDF
+  const invoice = document.getElementById("pdf-content");
+  const options = {
+    margin: 1,
+    filename: `Invoice_${invoiceNumber}.pdf`,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+  };
 
-  // Download the PDF
-  doc.save('invoice.pdf');
+  html2pdf().set(options).from(invoice).save();
 });
