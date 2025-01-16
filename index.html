@@ -21,10 +21,19 @@
         button:hover {
             background-color: #155F91;
         }
+        input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 200px;
+        }
     </style>
 </head>
 <body>
 
+    <h2>Enter Invoice Number</h2>
+    <input type="text" id="invoiceNumber" maxlength="6" placeholder="6-digit Invoice Number" pattern="\d{6}" required>
+    <br>
     <button id="downloadButton">Download</button>
 
     <!-- Add jsPDF library -->
@@ -32,6 +41,15 @@
 
     <script>
         document.getElementById('downloadButton').addEventListener('click', function() {
+            // Get the invoice number from the input field
+            const invoiceNumber = document.getElementById('invoiceNumber').value;
+
+            // Check if the invoice number is 6 digits
+            if (invoiceNumber.length !== 6 || isNaN(invoiceNumber)) {
+                alert("Please enter a valid 6-digit invoice number.");
+                return;
+            }
+
             // Create a new jsPDF instance with specified dimensions (909px width, 1285px height)
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({
@@ -51,6 +69,24 @@
 
                 // Add the logo to the PDF at the specified position (40px from top, 108px from left)
                 doc.addImage(img, 'PNG', 108, 40, logoWidth, logoHeight);
+
+                // Add the text "INVOICE" and the invoice number to the PDF
+                const text = "INVOICE";
+                const fontSize = 36;
+                doc.setFont("Arial", "bold");
+                doc.setFontSize(fontSize);
+
+                // Calculate the position to horizontally center the text and invoice number
+                const totalWidth = 909; // Document width
+                const invoiceTextWidth = doc.getTextWidth(text);
+                const invoiceNumberWidth = doc.getTextWidth(invoiceNumber);
+
+                const invoiceTextX = (totalWidth - (invoiceTextWidth + invoiceNumberWidth + 9)) / 2;
+                const invoiceNumberX = invoiceTextX + invoiceTextWidth + 9;
+
+                // Position: 120px from top, centered horizontally
+                doc.text(text, invoiceTextX, 120); // "INVOICE" text
+                doc.text(invoiceNumber, invoiceNumberX, 120); // Invoice number
 
                 // Save the PDF
                 doc.save('download.pdf');
