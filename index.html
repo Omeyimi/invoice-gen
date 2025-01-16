@@ -55,16 +55,12 @@
         <input type="date" id="invoiceDate" required />
         <br />
 
-        <label for="paymentConditions">Payment Conditions</label>
-        <input type="text" id="paymentConditions" placeholder="Payment Conditions" required />
+        <label for="paymentConditions">Payment Conditions (Number of Days)</label>
+        <input type="number" id="paymentConditions" placeholder="Payment Conditions (Days)" required />
         <br />
 
         <label for="invoicedAmount">Invoiced Amount</label>
         <input type="text" id="invoicedAmount" placeholder="Invoiced Amount" required />
-        <br />
-
-        <label for="latestPaymentDate">Latest Payment Date</label>
-        <input type="date" id="latestPaymentDate" required />
         <br />
 
         <label for="yourReference">Your reference</label>
@@ -73,6 +69,10 @@
 
         <label for="ourReference">Our reference</label>
         <input type="text" id="ourReference" placeholder="Our reference" required />
+        <br />
+
+        <label for="serviceDetails">Service Details</label>
+        <input type="text" id="serviceDetails" placeholder="Service Details" required />
         <br />
 
         <button id="downloadButton">Download</button>
@@ -96,14 +96,27 @@
             // Get the input values
             const invoiceNumber = document.getElementById("invoiceNumber").value;
             const invoiceDate = document.getElementById("invoiceDate").value;
-            const paymentConditions = document.getElementById("paymentConditions").value;
+            const paymentConditions = parseInt(document.getElementById("paymentConditions").value);
             const invoicedAmount = document.getElementById("invoicedAmount").value;
-            const latestPaymentDate = document.getElementById("latestPaymentDate").value;
             const yourReference = document.getElementById("yourReference").value;
             const ourReference = document.getElementById("ourReference").value;
+            const serviceDetails = document.getElementById("serviceDetails").value;
 
-            // Convert the date to the format: "January 30, 2025"
-            const formattedDate = new Date(invoiceDate).toLocaleDateString("en-US", {
+            // Convert the invoice date to a Date object
+            const invoiceDateObj = new Date(invoiceDate);
+
+            // Calculate the latest payment date by adding the payment conditions (days)
+            const latestPaymentDateObj = new Date(invoiceDateObj);
+            latestPaymentDateObj.setDate(latestPaymentDateObj.getDate() + paymentConditions);
+
+            // Convert the dates to the format: "January 30, 2025"
+            const formattedDate = invoiceDateObj.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            });
+
+            const formattedLatestPaymentDate = latestPaymentDateObj.toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -169,7 +182,7 @@
                 detailsY += 28; // Move 28px down for next field
 
                 // Add Payment conditions
-                doc.text(`Payment conditions: ${paymentConditions}`, detailsX, detailsY);
+                doc.text(`Payment conditions: ${paymentConditions} days`, detailsX, detailsY);
                 detailsY += 28; // Move 28px down for next field
 
                 // Add Invoiced amount
@@ -177,15 +190,18 @@
                 detailsY += 28; // Move 28px down for next field
 
                 // Add Latest payment date
-                const formattedLatestPaymentDate = new Date(latestPaymentDate).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                });
                 doc.text(`Latest payment date: ${formattedLatestPaymentDate}`, detailsX, detailsY);
 
+                // Add Service details (no "Service details:" label, just the value)
+                doc.setFont("helvetica", "bold"); // Bold font for service details
+                doc.setFontSize(24);
+                doc.text(serviceDetails, 108, 516); // Position from 540px
+
+                // Reset font to normal for subsequent text
+                doc.setFont("helvetica", "normal");
+
                 // Add Your reference
-                detailsY = 416; // Position from 448px
+                detailsY = 416; // Position from 416px
                 doc.text(`Your reference: ${yourReference}`, 108, detailsY);
                 detailsY += 28; // Move 28px down for next field
 
