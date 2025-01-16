@@ -59,52 +59,35 @@
 
             // Define the logo image URL (the PNG image hosted on GitHub)
             const logoUrl = 'https://raw.githubusercontent.com/Omeyimi/invoice-gen/refs/heads/main/Mobilelabs%20logo.png';
-            const backgroundImageUrl = 'https://raw.githubusercontent.com/Omeyimi/invoice-gen/refs/heads/main/mobile%20labs%20Vector.png';
 
             // Fetch the logo image
             const logoImg = new Image();
             logoImg.onload = function() {
-                // Fetch the background image
-                const backgroundImg = new Image();
-                backgroundImg.onload = function() {
-                    // Set fixed size for the background image (629.93px x 590.71px)
-                    const backgroundImgWidth = 629.93;
-                    const backgroundImgHeight = 590.71;
+                // Add the logo to the PDF at the specified position (40px from top, 108px from left)
+                const logoWidth = logoImg.width;
+                const logoHeight = logoImg.height;
+                doc.addImage(logoImg, 'PNG', 108, 40, logoWidth, logoHeight);
 
-                    // Position the background image at the bottom-right corner
-                    const backgroundX = 909 - backgroundImgWidth;  // Right edge
-                    const backgroundY = 1285 - backgroundImgHeight; // Bottom edge
+                // Add the text "INVOICE" and the invoice number to the PDF
+                const text = "INVOICE";
+                const fontSize = 36;
+                doc.setFont("helvetica", "bold");  // Use built-in Helvetica bold font
+                doc.setFontSize(fontSize);
 
-                    // Add the background image to the PDF
-                    doc.addImage(backgroundImg, 'PNG', backgroundX, backgroundY, backgroundImgWidth, backgroundImgHeight);
+                // Calculate the position to horizontally center the text and invoice number
+                const totalWidth = 909; // Document width
+                const invoiceTextWidth = doc.getTextWidth(text);
+                const invoiceNumberWidth = doc.getTextWidth(invoiceNumber);
 
-                    // Add the logo to the PDF at the specified position (40px from top, 108px from left)
-                    const logoWidth = logoImg.width;
-                    const logoHeight = logoImg.height;
-                    doc.addImage(logoImg, 'PNG', 108, 40, logoWidth, logoHeight);
+                const invoiceTextX = (totalWidth - (invoiceTextWidth + invoiceNumberWidth + 9)) / 2;
+                const invoiceNumberX = invoiceTextX + invoiceTextWidth + 9;
 
-                    // Add the text "INVOICE" and the invoice number to the PDF
-                    const text = "INVOICE";
-                    const fontSize = 36;
-                    doc.setFont("helvetica", "bold");  // Use built-in Helvetica bold font
-                    doc.setFontSize(fontSize);
+                // Position: 120px from top, centered horizontally
+                doc.text(text, invoiceTextX, 120); // "INVOICE" text
+                doc.text(invoiceNumber, invoiceNumberX, 120); // Invoice number
 
-                    // Calculate the position to horizontally center the text and invoice number
-                    const totalWidth = 909; // Document width
-                    const invoiceTextWidth = doc.getTextWidth(text);
-                    const invoiceNumberWidth = doc.getTextWidth(invoiceNumber);
-
-                    const invoiceTextX = (totalWidth - (invoiceTextWidth + invoiceNumberWidth + 9)) / 2;
-                    const invoiceNumberX = invoiceTextX + invoiceTextWidth + 9;
-
-                    // Position: 120px from top, centered horizontally
-                    doc.text(text, invoiceTextX, 120); // "INVOICE" text
-                    doc.text(invoiceNumber, invoiceNumberX, 120); // Invoice number
-
-                    // Save the PDF
-                    doc.save('download.pdf');
-                };
-                backgroundImg.src = backgroundImageUrl;
+                // Save the PDF
+                doc.save('download.pdf');
             };
             logoImg.src = logoUrl;
         });
