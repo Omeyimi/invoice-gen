@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice generator</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice Generator</title>
     <style>
+        /* Styles for the page */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 50px;
         }
+
         button {
-            background-color: #1E75BC;
+            background-color: #1e75bc;
             color: white;
             font-size: 16px;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
         }
+
         button:hover {
-            background-color: #155F91;
+            background-color: #155f91;
         }
-        input[type="text"], input[type="date"], input[type="number"] {
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
             padding: 8px;
             font-size: 16px;
             margin: 5px 0 15px 0;
             width: 200px;
         }
+
         label {
             display: block;
             font-weight: bold;
@@ -34,94 +42,107 @@
         }
     </style>
 </head>
-<body>
 
+<body>
     <h2>Enter Invoice Details</h2>
 
-    <label for="invoiceNumber">Invoice Number</label>
-    <input type="text" id="invoiceNumber" placeholder="Invoice Number" required>
-    <br>
+    <form id="invoice-form">
+        <label for="invoiceNumber">Invoice Number</label>
+        <input type="text" id="invoiceNumber" placeholder="Invoice Number" required />
+        <br />
 
-    <label for="invoiceDate">Invoice Date</label>
-    <input type="date" id="invoiceDate" required>
-    <br>
+        <label for="invoiceDate">Invoice Date</label>
+        <input type="date" id="invoiceDate" required />
+        <br />
 
-    <label for="paymentConditions">Payment Conditions</label>
-    <input type="text" id="paymentConditions" placeholder="Payment Conditions" required>
-    <br>
+        <label for="paymentConditions">Payment Conditions</label>
+        <input type="text" id="paymentConditions" placeholder="Payment Conditions" required />
+        <br />
 
-    <label for="invoicedAmount">Invoiced Amount</label>
-    <input type="text" id="invoicedAmount" placeholder="Invoiced Amount" required>
-    <br>
+        <label for="invoicedAmount">Invoiced Amount</label>
+        <input type="text" id="invoicedAmount" placeholder="Invoiced Amount" required />
+        <br />
 
-    <label for="latestPaymentDate">Latest Payment Date</label>
-    <input type="date" id="latestPaymentDate" required>
-    <br>
+        <label for="latestPaymentDate">Latest Payment Date</label>
+        <input type="date" id="latestPaymentDate" required />
+        <br />
 
-    <label for="yourReference">Your reference</label>
-    <input type="text" id="yourReference" placeholder="Your reference" required>
-    <br>
+        <label for="yourReference">Your reference</label>
+        <input type="text" id="yourReference" placeholder="Your reference" required />
+        <br />
 
-    <label for="ourReference">Our reference</label>
-    <input type="text" id="ourReference" placeholder="Our reference" required>
-    <br>
+        <label for="ourReference">Our reference</label>
+        <input type="text" id="ourReference" placeholder="Our reference" required />
+        <br />
 
-    <button id="downloadButton">Download</button>
+        <button id="downloadButton">Download</button>
+    </form>
 
     <!-- Add jsPDF library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-        document.getElementById('downloadButton').addEventListener('click', function() {
+        // Get the form and download button
+        const form = document.getElementById("invoice-form");
+        const downloadButton = document.getElementById("downloadButton");
+
+        // Add event listener to the download button
+        downloadButton.addEventListener("click", generateInvoice);
+
+        // Function to generate the invoice
+        function generateInvoice(event) {
+            event.preventDefault();
+
             // Get the input values
-            const invoiceNumber = document.getElementById('invoiceNumber').value;
-            const invoiceDate = document.getElementById('invoiceDate').value;
-            const paymentConditions = document.getElementById('paymentConditions').value;
-            const invoicedAmount = document.getElementById('invoicedAmount').value;
-            const latestPaymentDate = document.getElementById('latestPaymentDate').value;
-            const yourReference = document.getElementById('yourReference').value;
-            const ourReference = document.getElementById('ourReference').value;
+            const invoiceNumber = document.getElementById("invoiceNumber").value;
+            const invoiceDate = document.getElementById("invoiceDate").value;
+            const paymentConditions = document.getElementById("paymentConditions").value;
+            const invoicedAmount = document.getElementById("invoicedAmount").value;
+            const latestPaymentDate = document.getElementById("latestPaymentDate").value;
+            const yourReference = document.getElementById("yourReference").value;
+            const ourReference = document.getElementById("ourReference").value;
 
             // Convert the date to the format: "January 30, 2025"
-            const formattedDate = new Date(invoiceDate).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+            const formattedDate = new Date(invoiceDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
             });
 
             // Create a new jsPDF instance with specified dimensions (909px width, 1285px height)
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({
-                unit: 'px',  // Using pixels as unit
-                format: [909, 1285]
+                unit: "px", // Using pixels as unit
+                format: [909, 1285],
             });
 
             // Define the logo image URL (the PNG image hosted on GitHub)
-            const logoUrl = 'https://raw.githubusercontent.com/Omeyimi/invoice-gen/refs/heads/main/Mobilelabs%20logo.png';
+            const logoUrl =
+                "https://raw.githubusercontent.com/Omeyimi/invoice-gen/refs/heads/main/Mobilelabs%20logo.png";
 
             // Fetch the logo image
             const logoImg = new Image();
-            logoImg.onload = function() {
+            logoImg.onload = function () {
                 // Add the logo to the PDF at the specified position (40px from top, 108px from left)
                 const logoWidth = 195.15; // Set the logo width to 195.15px
                 const logoHeight = 25.88; // Set the logo height to 25.88px
-                doc.addImage(logoImg, 'PNG', 108, 40, logoWidth, logoHeight);
+                doc.addImage(logoImg, "PNG", 108, 40, logoWidth, logoHeight);
 
                 // Add Northern Partners ApS address
-                doc.setFont("helvetica", "bold");  // Use Helvetica bold for the first line
+                doc.setFont("helvetica", "bold"); // Use Helvetica bold for the first line
                 doc.setFontSize(24);
-                doc.text("Northern Partners ApS", 108, 245);  // Position for first line (108px from left, 245px from top)
+                doc.text("Northern Partners ApS", 108, 245); // Position for first line (108px from left, 245px from top)
 
-                doc.setFont("helvetica", "normal");  // Use Helvetica regular for the remaining lines
+                doc.setFont("helvetica", "normal"); // Use Helvetica regular for the remaining lines
                 doc.setFontSize(24);
-                doc.text("Hovedvagtsgade 6, 1", 108, 273);  // 28px below
-                doc.text("DK - 1103 COPENHAGEN K", 108, 301);  // 28px below
-                doc.text("DENMARK", 108, 329);  // 28px below
+                doc.text("Hovedvagtsgade 6, 1", 108, 273); // 28px below
+                doc.text("DK - 1103 COPENHAGEN K", 108, 301); // 28px below
+                doc.text("DENMARK", 108, 329); // 28px below
 
                 // Add the text "INVOICE" and the invoice number to the PDF
                 const text = "INVOICE";
                 const fontSize = 48;
-                doc.setFont("helvetica", "bold");  // Use built-in Helvetica bold font
+                doc.setFont("helvetica", "bold"); // Use built-in Helvetica bold font
                 doc.setFontSize(fontSize);
 
                 // Calculate the position to horizontally center the text and invoice number
@@ -140,33 +161,33 @@
                 const detailsX = 440; // Position from the left
                 let detailsY = 245; // Start from 230px from top
 
-                doc.setFont("helvetica", "normal");  // Use built-in Helvetica regular font
+                doc.setFont("helvetica", "normal"); // Use built-in Helvetica regular font
                 doc.setFontSize(24);
 
                 // Add Date
                 doc.text(`Date: ${formattedDate}`, detailsX, detailsY);
-                detailsY += 28;  // Move 28px down for next field
+                detailsY += 28; // Move 28px down for next field
 
                 // Add Payment conditions
                 doc.text(`Payment conditions: ${paymentConditions}`, detailsX, detailsY);
-                detailsY += 28;  // Move 28px down for next field
+                detailsY += 28; // Move 28px down for next field
 
                 // Add Invoiced amount
                 doc.text(`Invoiced amount: ${invoicedAmount}`, detailsX, detailsY);
-                detailsY += 28;  // Move 28px down for next field
+                detailsY += 28; // Move 28px down for next field
 
                 // Add Latest payment date
-                const formattedLatestPaymentDate = new Date(latestPaymentDate).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
+                const formattedLatestPaymentDate = new Date(latestPaymentDate).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
                 });
                 doc.text(`Latest payment date: ${formattedLatestPaymentDate}`, detailsX, detailsY);
 
                 // Add Your reference
                 detailsY = 416; // Position from 448px
                 doc.text(`Your reference: ${yourReference}`, 108, detailsY);
-                detailsY += 28;  // Move 28px down for next field
+                detailsY += 28; // Move 28px down for next field
 
                 // Add Our reference
                 doc.text(`Our reference: ${ourReference}`, 108, detailsY);
@@ -182,11 +203,11 @@
                 doc.rect(rectX, rectY, rectWidth, rectHeight); // Draw the rectangle
 
                 // Save the PDF
-                doc.save('download.pdf');
+                doc.save("download.pdf");
             };
             logoImg.src = logoUrl;
-        });
+        }
     </script>
-
 </body>
+
 </html>
