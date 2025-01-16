@@ -39,19 +39,24 @@
                 format: [909, 1285]
             });
 
-            // Define the logo image URL (replace with your own logo URL)
-            const logoUrl = 'https://raw.githubusercontent.com/Omeyimi/invoice-gen/d6be30d0d34ea2e0a620a6617b50dfdff8cf7f85/Mobielabs%20logo.svg'; // Replace this with your logo URL
+            // Define the logo image URL (the PNG image hosted on GitHub)
+            const logoUrl = 'https://raw.githubusercontent.com/Omeyimi/invoice-gen/refs/heads/main/Mobilelabs%20logo.png';
 
             // Add the logo to the PDF at the specified position (40px from top, 108px from left)
             const logoWidth = 100;  // Adjust the width of the logo
             const logoHeight = 100; // Adjust the height of the logo
-            doc.addImage(logoUrl, 'PNG', 108, 40, logoWidth, logoHeight);
 
-            // Save the PDF
-            doc.save('download.pdf');
+            // Fetch the image using an Image object to ensure it loads correctly before adding to the PDF
+            const img = new Image();
+            img.onload = function() {
+                doc.addImage(img, 'PNG', 108, 40, logoWidth, logoHeight);
+
+                // Save the PDF
+                doc.save('download.pdf');
+            };
+            img.src = logoUrl;
         });
     </script>
 
 </body>
 </html>
-
