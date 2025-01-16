@@ -99,7 +99,7 @@
 
                 // Add the text "INVOICE" and the invoice number to the PDF
                 const text = "INVOICE";
-                const fontSize = 36;
+                const fontSize = 48;
                 doc.setFont("helvetica", "bold");  // Use built-in Helvetica bold font
                 doc.setFontSize(fontSize);
 
@@ -108,19 +108,19 @@
                 const invoiceTextWidth = doc.getTextWidth(text);
                 const invoiceNumberWidth = doc.getTextWidth(invoiceNumber);
 
-                const invoiceTextX = (totalWidth - (invoiceTextWidth + invoiceNumberWidth + 9)) / 2;
+                const invoiceTextX = (totalWidth - (invoiceTextWidth + invoiceNumberWidth + 12)) / 2;
                 const invoiceNumberX = invoiceTextX + invoiceTextWidth + 9;
 
                 // Position: 120px from top, centered horizontally
-                doc.text(text, invoiceTextX, 120); // "INVOICE" text
-                doc.text(invoiceNumber, invoiceNumberX, 120); // Invoice number
+                doc.text(text, invoiceTextX, 153); // "INVOICE" text
+                doc.text(invoiceNumber, invoiceNumberX, 153); // Invoice number
 
                 // Add Date, Payment conditions, Invoiced amount, and Latest payment date
                 const detailsX = 440; // Position from the left
-                let detailsY = 230; // Start from 230px from top
+                let detailsY = 245; // Start from 230px from top
 
                 doc.setFont("helvetica", "normal");  // Use built-in Helvetica regular font
-                doc.setFontSize(18);
+                doc.setFontSize(24);
 
                 // Add Date
                 doc.text(`Date: ${formattedDate}`, detailsX, detailsY);
@@ -144,7 +144,7 @@
 
                 // Add the rectangle (no fill, 1px stroke width)
                 const rectX = 429; // Position 429px from the right
-                const rectY = 202; // Position 217px from the top
+                const rectY = 215; // Position 217px from the top
                 const rectWidth = 372;
                 const rectHeight = 132;
 
