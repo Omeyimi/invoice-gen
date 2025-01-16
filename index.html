@@ -77,8 +77,8 @@
             const logoImg = new Image();
             logoImg.onload = function() {
                 // Add the logo to the PDF at the specified position (40px from top, 108px from left)
-                const logoWidth = logoImg.width;
-                const logoHeight = logoImg.height;
+                const logoWidth = 195.15; // Set the logo width to 195.15px
+                const logoHeight = 25.88; // Set the logo height to 25.88px
                 doc.addImage(logoImg, 'PNG', 108, 40, logoWidth, logoHeight);
 
                 // Add the text "INVOICE" and the invoice number to the PDF
@@ -127,8 +127,8 @@
                 doc.text(`Latest payment date: ${formattedLatestPaymentDate}`, detailsX, detailsY);
 
                 // Add the rectangle (no fill, 1px stroke width)
-                const rectX = 429; // Position 429px from the right
-                const rectY = 204; // Position 217px from the top
+                const rectX = 909 - 429 - 372; // Position 429px from the right
+                const rectY = 217; // Position 217px from the top
                 const rectWidth = 372;
                 const rectHeight = 132;
 
