@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice generator</title>
+    <title>Download PDF Example</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,12 +58,12 @@
     <input type="date" id="latestPaymentDate" required>
     <br>
 
-    <label for="yourReference">Your Reference</label>
-    <input type="text" id="yourReference" placeholder="Your Reference" required>
+    <label for="yourReference">Your reference</label>
+    <input type="text" id="yourReference" placeholder="Your reference" required>
     <br>
 
-    <label for="ourReference">Our Reference</label>
-    <input type="text" id="ourReference" placeholder="Our Reference" required>
+    <label for="ourReference">Our reference</label>
+    <input type="text" id="ourReference" placeholder="Our reference" required>
     <br>
 
     <button id="downloadButton">Download</button>
@@ -107,6 +107,17 @@
                 const logoHeight = 25.88; // Set the logo height to 25.88px
                 doc.addImage(logoImg, 'PNG', 108, 40, logoWidth, logoHeight);
 
+                // Add Northern Partners ApS address
+                doc.setFont("helvetica", "bold");  // Use Helvetica bold for the first line
+                doc.setFontSize(24);
+                doc.text("Northern Partners ApS", 108, 245);  // Position for first line (108px from left, 245px from top)
+
+                doc.setFont("helvetica", "normal");  // Use Helvetica regular for the remaining lines
+                doc.setFontSize(24);
+                doc.text("Hovedvagtsgade 6, 1", 108, 273);  // 28px below
+                doc.text("DK - 1103 COPENHAGEN K", 108, 301);  // 28px below
+                doc.text("DENMARK", 108, 329);  // 28px below
+
                 // Add the text "INVOICE" and the invoice number to the PDF
                 const text = "INVOICE";
                 const fontSize = 48;
@@ -121,40 +132,54 @@
                 const invoiceTextX = (totalWidth - (invoiceTextWidth + invoiceNumberWidth + 12)) / 2;
                 const invoiceNumberX = invoiceTextX + invoiceTextWidth + 9;
 
-                // Position: 153px from top, centered horizontally
+                // Position: 120px from top, centered horizontally
                 doc.text(text, invoiceTextX, 153); // "INVOICE" text
                 doc.text(invoiceNumber, invoiceNumberX, 153); // Invoice number
 
-                // Add Northern Partners ApS address
-                const addressX = 108; // Position from the left
-                let addressY = 245; // Start from 245px from top
+                // Add Date, Payment conditions, Invoiced amount, and Latest payment date
+                const detailsX = 440; // Position from the left
+                let detailsY = 245; // Start from 230px from top
+
+                doc.setFont("helvetica", "normal");  // Use built-in Helvetica regular font
                 doc.setFontSize(24);
 
-                // Add the address lines
-                doc.setFont("helvetica", "bold");
-                doc.text("Northern Partners ApS", addressX, addressY);
-                addressY += 28; // Move 28px down for the next line
+                // Add Date
+                doc.text(`Date: ${formattedDate}`, detailsX, detailsY);
+                detailsY += 28;  // Move 28px down for next field
 
-                doc.setFont("helvetica", "normal");
-                doc.text("Hovedvagtsgade 6, 1", addressX, addressY);
-                addressY += 28;
+                // Add Payment conditions
+                doc.text(`Payment conditions: ${paymentConditions}`, detailsX, detailsY);
+                detailsY += 28;  // Move 28px down for next field
 
-                doc.text("DK - 1103 COPENHAGEN K", addressX, addressY);
-                addressY += 28;
+                // Add Invoiced amount
+                doc.text(`Invoiced amount: ${invoicedAmount}`, detailsX, detailsY);
+                detailsY += 28;  // Move 28px down for next field
 
-                doc.text("DENMARK", addressX, addressY);
+                // Add Latest payment date
+                const formattedLatestPaymentDate = new Date(latestPaymentDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                doc.text(`Latest payment date: ${formattedLatestPaymentDate}`, detailsX, detailsY);
 
-                // Add Your Reference and Our Reference
-                const referenceX = 108; // Position from the left
-                let referenceY = 448; // Start from 448px from top
-                doc.setFontSize(24);
+                // Add Your reference
+                detailsY = 448; // Position from 448px
+                doc.text(`Your reference: ${yourReference}`, 108, detailsY);
+                detailsY += 28;  // Move 28px down for next field
 
-                // Add Your Reference
-                doc.text(`Your reference: ${yourReference}`, referenceX, referenceY);
-                referenceY += 28; // Move 28px down for the next field
+                // Add Our reference
+                doc.text(`Our reference: ${ourReference}`, 108, detailsY);
 
-                // Add Our Reference
-                doc.text(`Our reference: ${ourReference}`, referenceX, referenceY);
+                // Add the rectangle (no fill, 1px stroke width)
+                const rectX = 429; // Position 429px from the right
+                const rectY = 215; // Position 217px from the top
+                const rectWidth = 372;
+                const rectHeight = 132;
+
+                doc.setDrawColor(0); // Black color for stroke
+                doc.setLineWidth(1); // Stroke width of 1px
+                doc.rect(rectX, rectY, rectWidth, rectHeight); // Draw the rectangle
 
                 // Save the PDF
                 doc.save('download.pdf');
