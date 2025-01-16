@@ -1,116 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invoice Generator</title>
-  <style>
-    body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  margin: 10px 0 5px;
-}
-
-input, textarea {
-  padding: 8px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  padding: 10px 15px;
-  background-color: #007BFF;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-.hidden {
-  display: none;
-}
-
-#invoice {
-  padding: 20px;
-  border: 1px solid #ccc;
-  margin-top: 20px;
-}
-
-#invoice h1 {
-  text-align: left;
-  color: #007BFF;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download PDF Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        button {
+            background-color: #1E75BC;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #155F91;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Invoice Generator</h1>
-    <form id="invoice-form">
-      <label for="issueDate">Issue Date:</label>
-      <input type="date" id="issueDate" required>
 
-      <label for="invoiceNumber">Invoice Number:</label>
-      <input type="text" id="invoiceNumber" required>
+    <button id="downloadButton">Download</button>
 
-      <label for="paymentConditions">Payment Conditions:</label>
-      <input type="text" id="paymentConditions" required>
+    <!-- Add jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-      <label for="invoiceAmount">Invoice Amount (DKK):</label>
-      <input type="number" id="invoiceAmount" required>
+    <script>
+        document.getElementById('downloadButton').addEventListener('click', function() {
+            // Create a new jsPDF instance with specified dimensions (909px width, 1285px height)
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                unit: 'px',  // Using pixels as unit
+                format: [909, 1285]
+            });
 
-      <label for="latestPaymentDate">Latest Payment Date:</label>
-      <input type="date" id="latestPaymentDate" required>
+            // Define the logo image URL (replace with your own logo URL)
+            const logoUrl = 'https://example.com/logo.png'; // Replace this with your logo URL
 
-      <label for="yourReference">Your Reference:</label>
-      <input type="text" id="yourReference" required>
+            // Add the logo to the PDF at the specified position (40px from top, 108px from left)
+            const logoWidth = 100;  // Adjust the width of the logo
+            const logoHeight = 100; // Adjust the height of the logo
+            doc.addImage(logoUrl, 'PNG', 108, 40, logoWidth, logoHeight);
 
-      <label for="description">Description:</label>
-      <textarea id="description" rows="4" required></textarea>
+            // Save the PDF
+            doc.save('download.pdf');
+        });
+    </script>
 
-      <button type="button" id="generate-pdf">Generate PDF</button>
-    </form>
-    <div id="invoice" class="hidden">
-      <!-- Invoice Template -->
-      <div id="pdf-content">
-        <h1>INVOICE <span id="invoiceNumberDisplay"></span></h1>
-        <p>Date: <span id="issueDateDisplay"></span></p>
-        <p>Payment conditions: <span id="paymentConditionsDisplay"></span></p>
-        <p>Invoiced amount: <span id="invoiceAmountDisplay"></span> DKK</p>
-        <p>Latest payment date: <span id="latestPaymentDateDisplay"></span></p>
-        <p>Your reference: <span id="yourReferenceDisplay"></span></p>
-        <p>Description: <span id="descriptionDisplay"></span></p>
-      </div>
-    </div>
-  </div>
-
-  <script src="html2pdf.bundle.min.js"></script>
-  <script src="script.js"></script>
 </body>
 </html>
+
