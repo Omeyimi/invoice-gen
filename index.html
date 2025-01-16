@@ -21,7 +21,7 @@
         button:hover {
             background-color: #155F91;
         }
-        input[type="text"] {
+        input[type="text"], input[type="date"], input[type="number"] {
             padding: 8px;
             font-size: 16px;
             margin: 10px 0;
@@ -31,8 +31,16 @@
 </head>
 <body>
 
-    <h2>Enter Invoice Number</h2>
-    <input type="text" id="invoiceNumber" maxlength="6" placeholder="6-digit Invoice Number" pattern="\d{6}" required>
+    <h2>Enter Invoice Details</h2>
+    <input type="text" id="invoiceNumber" placeholder="Invoice Number" required>
+    <br>
+    <input type="date" id="invoiceDate" required>
+    <br>
+    <input type="text" id="paymentConditions" placeholder="Payment Conditions" required>
+    <br>
+    <input type="text" id="invoicedAmount" placeholder="Invoiced Amount" required>
+    <br>
+    <input type="date" id="latestPaymentDate" required>
     <br>
     <button id="downloadButton">Download</button>
 
@@ -41,14 +49,19 @@
 
     <script>
         document.getElementById('downloadButton').addEventListener('click', function() {
-            // Get the invoice number from the input field
+            // Get the input values
             const invoiceNumber = document.getElementById('invoiceNumber').value;
+            const invoiceDate = document.getElementById('invoiceDate').value;
+            const paymentConditions = document.getElementById('paymentConditions').value;
+            const invoicedAmount = document.getElementById('invoicedAmount').value;
+            const latestPaymentDate = document.getElementById('latestPaymentDate').value;
 
-            // Check if the invoice number is 6 digits
-            if (invoiceNumber.length !== 6 || isNaN(invoiceNumber)) {
-                alert("Please enter a valid 6-digit invoice number.");
-                return;
-            }
+            // Convert the date to the format: "January 30, 2025"
+            const formattedDate = new Date(invoiceDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
 
             // Create a new jsPDF instance with specified dimensions (909px width, 1285px height)
             const { jsPDF } = window.jspdf;
@@ -85,6 +98,43 @@
                 // Position: 120px from top, centered horizontally
                 doc.text(text, invoiceTextX, 120); // "INVOICE" text
                 doc.text(invoiceNumber, invoiceNumberX, 120); // Invoice number
+
+                // Add Date, Payment conditions, Invoiced amount, and Latest payment date
+                const detailsX = 440; // Position from the left
+                let detailsY = 230; // Start from 230px from top
+
+                doc.setFont("helvetica", "normal");  // Use built-in Helvetica regular font
+                doc.setFontSize(18);
+
+                // Add Date
+                doc.text(`Date: ${formattedDate}`, detailsX, detailsY);
+                detailsY += 28;  // Move 28px down for next field
+
+                // Add Payment conditions
+                doc.text(`Payment conditions: ${paymentConditions}`, detailsX, detailsY);
+                detailsY += 28;  // Move 28px down for next field
+
+                // Add Invoiced amount
+                doc.text(`Invoiced amount: ${invoicedAmount}`, detailsX, detailsY);
+                detailsY += 28;  // Move 28px down for next field
+
+                // Add Latest payment date
+                const formattedLatestPaymentDate = new Date(latestPaymentDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                doc.text(`Latest payment date: ${formattedLatestPaymentDate}`, detailsX, detailsY);
+
+                // Add the rectangle (no fill, 1px stroke width)
+                const rectX = 429; // Position 429px from the right
+                const rectY = 204; // Position 217px from the top
+                const rectWidth = 372;
+                const rectHeight = 132;
+
+                doc.setDrawColor(0); // Black color for stroke
+                doc.setLineWidth(1); // Stroke width of 1px
+                doc.rect(rectX, rectY, rectWidth, rectHeight); // Draw the rectangle
 
                 // Save the PDF
                 doc.save('download.pdf');
