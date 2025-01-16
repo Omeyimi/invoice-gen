@@ -42,13 +42,14 @@
             // Define the logo image URL (the PNG image hosted on GitHub)
             const logoUrl = 'https://raw.githubusercontent.com/Omeyimi/invoice-gen/refs/heads/main/Mobilelabs%20logo.png';
 
-            // Add the logo to the PDF at the specified position (40px from top, 108px from left)
-            const logoWidth = 100;  // Adjust the width of the logo
-            const logoHeight = 100; // Adjust the height of the logo
-
             // Fetch the image using an Image object to ensure it loads correctly before adding to the PDF
             const img = new Image();
             img.onload = function() {
+                // Use the natural width and height of the image (100% of the original size)
+                const logoWidth = img.width;
+                const logoHeight = img.height;
+
+                // Add the logo to the PDF at the specified position (40px from top, 108px from left)
                 doc.addImage(img, 'PNG', 108, 40, logoWidth, logoHeight);
 
                 // Save the PDF
