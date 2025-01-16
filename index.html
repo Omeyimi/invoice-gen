@@ -111,13 +111,32 @@
                 const invoiceTextX = (totalWidth - (invoiceTextWidth + invoiceNumberWidth + 12)) / 2;
                 const invoiceNumberX = invoiceTextX + invoiceTextWidth + 9;
 
-                // Position: 120px from top, centered horizontally
+                // Position: 153px from top, centered horizontally
                 doc.text(text, invoiceTextX, 153); // "INVOICE" text
                 doc.text(invoiceNumber, invoiceNumberX, 153); // Invoice number
 
+                // Add Northern Partners ApS address
+                const addressX = 108; // Position from the left
+                let addressY = 245; // Start from 245px from top
+                doc.setFontSize(24);
+
+                // Add the address lines
+                doc.setFont("helvetica", "bold");
+                doc.text("Northern Partners ApS", addressX, addressY);
+                addressY += 28; // Move 28px down for the next line
+
+                doc.setFont("helvetica", "normal");
+                doc.text("Hovedvagtsgade 6, 1", addressX, addressY);
+                addressY += 28;
+
+                doc.text("DK - 1103 COPENHAGEN K", addressX, addressY);
+                addressY += 28;
+
+                doc.text("DENMARK", addressX, addressY);
+
                 // Add Date, Payment conditions, Invoiced amount, and Latest payment date
                 const detailsX = 440; // Position from the left
-                let detailsY = 245; // Start from 230px from top
+                let detailsY = 245; // Start from 245px from top
 
                 doc.setFont("helvetica", "normal");  // Use built-in Helvetica regular font
                 doc.setFontSize(24);
@@ -144,7 +163,7 @@
 
                 // Add the rectangle (no fill, 1px stroke width)
                 const rectX = 429; // Position 429px from the right
-                const rectY = 215; // Position 217px from the top
+                const rectY = 215; // Position 215px from the top
                 const rectWidth = 372;
                 const rectHeight = 132;
 
