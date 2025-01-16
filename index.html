@@ -67,10 +67,16 @@
                 // Fetch the background image
                 const backgroundImg = new Image();
                 backgroundImg.onload = function() {
-                    // Add the background image to the PDF (fill entire page)
-                    const backgroundImgWidth = 909;  // Document width
-                    const backgroundImgHeight = 1285; // Document height
-                    doc.addImage(backgroundImg, 'PNG', 0, 0, backgroundImgWidth, backgroundImgHeight);
+                    // Set fixed size for the background image (629.93px x 590.71px)
+                    const backgroundImgWidth = 629.93;
+                    const backgroundImgHeight = 590.71;
+
+                    // Position the background image at the bottom-right corner
+                    const backgroundX = 909 - backgroundImgWidth;  // Right edge
+                    const backgroundY = 1285 - backgroundImgHeight; // Bottom edge
+
+                    // Add the background image to the PDF
+                    doc.addImage(backgroundImg, 'PNG', backgroundX, backgroundY, backgroundImgWidth, backgroundImgHeight);
 
                     // Add the logo to the PDF at the specified position (40px from top, 108px from left)
                     const logoWidth = logoImg.width;
