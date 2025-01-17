@@ -185,12 +185,25 @@
                 doc.text(`Payment conditions: ${paymentConditions} days`, detailsX, detailsY);
                 detailsY += 28; // Move 28px down for next field
 
-                // Add Invoiced amount
-                doc.text(`Invoiced amount: ${invoicedAmount}`, detailsX, detailsY);
+                // Add Invoiced amount (label and value, with value in bold)
+                const invoicedLabel = "Invoiced amount:";
+                const invoicedLabelWidth = doc.getTextWidth(invoicedLabel);
+                doc.text(invoicedLabel, detailsX, detailsY);
+
+                doc.setFont("helvetica", "bold"); // Bold font for value
+                doc.text(invoicedAmount, detailsX + invoicedLabelWidth + 5, detailsY);
+                doc.setFont("helvetica", "normal"); // Reset font
+
                 detailsY += 28; // Move 28px down for next field
 
-                // Add Latest payment date
-                doc.text(`Latest payment date: ${formattedLatestPaymentDate}`, detailsX, detailsY);
+                // Add Latest payment date (label and value, with value in bold)
+                const paymentDateLabel = "Latest payment date:";
+                const paymentDateLabelWidth = doc.getTextWidth(paymentDateLabel);
+                doc.text(paymentDateLabel, detailsX, detailsY);
+
+                doc.setFont("helvetica", "bold"); // Bold font for value
+                doc.text(formattedLatestPaymentDate, detailsX + paymentDateLabelWidth + 5, detailsY);
+                doc.setFont("helvetica", "normal"); // Reset font
 
                 // Add Service details (no "Service details:" label, just the value)
                 doc.setFont("helvetica", "bold"); // Bold font for service details
